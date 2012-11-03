@@ -2,17 +2,17 @@ typedef struct
 {
 	char * name;
 	ObjectNode * next;
-	Handler * handler;
+	HC_Handler * handler;
 	void * object;
 }
 
 typedef struct
 {
 	char * name;
-	Handler * next;
-	PreOp * pre;
-	PostOp * post;
+	HC_Handler * next;
+	HC_PreOpFunction * pre;
+	HC_PostOpFunction * post;
 	void * preArgs;
 	void * postArgs;
-	MutOp * op;
+	HC_MutatorFunction * op;
 };
