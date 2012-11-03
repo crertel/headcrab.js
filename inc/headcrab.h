@@ -45,7 +45,7 @@ typedef void (*HC_MutatorFunction)(void* _target, const json_t* _args);
     @param _assetDir - null-terminated string of a path (relative or absolute) to host files from.
     @return HC_SUCCESS on success, HC_ERROR otherwise.
 */
-HEADCRAB_ERR headcrab_init(const char* _assetDir);
+HEADCRAB_ERROR headcrab_init(const char* _assetDir);
 
 /*
     Function to close headcrab--this will clean up the web server and disconnect clients.
@@ -96,7 +96,7 @@ void headcrab_clear_all_object_bindings( const char* _name );
 /*
     Function to change the object memory binding--useful, for example, during reallocations or garbage collection.
 
-    @param _nam - null-terminated string of the object to rebind.
+    @param _name - null-terminated string of the object to rebind.
     @param _object - void* to the location of the object in memory.
     @return void.
 */
