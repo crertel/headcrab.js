@@ -11,11 +11,11 @@
 #define strtoll strtol
 typedef __int64 int64_t;
 #define O_CLOEXEC 0
-#define O_EXLOCK 0
 #else 
 #include <inttypes.h>
 #include <unistd.h>
 #endif // !_WIN32
+#define O_EXLOCK 0
 
 #include "mongoose.h"
 
