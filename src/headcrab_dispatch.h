@@ -4,7 +4,7 @@ typedef struct
 	ObjectNode * next;
 	HC_Handler * handler;
 	void * object;
-}
+} HC_ObjectNode;
 
 typedef struct
 {
@@ -15,4 +15,30 @@ typedef struct
 	void * preArgs;
 	void * postArgs;
 	HC_MutatorFunction * op;
-};
+} HC_Handler;
+
+void dispatch_table_add(HC_ObjectNode* _table,
+						void* _target,
+                        const char* _name,
+                        const char* _verb,
+                        HC_PreOpFucntion _preOp,
+                        const void* _preOpArgs,
+                        HC_MutatorFunction _op,
+                        HC_PostOpFucntion _postOp,
+                        const void* _postOpArgs
+                        );
+
+void add_or_find_node(  HC_ObjectNode** out,
+						HC_ObjectNode* _table,
+						void* _target,
+						const char* _name
+					  );
+
+void node_add_handler(	HC_ObjectNode* node,
+                        const char* _verb,
+                        HC_PreOpFucntion _preOp,
+                        const void* _preOpArgs,
+                        HC_MutatorFunction _op,
+                        HC_PostOpFucntion _postOp,
+                        const void* _postOpArgs
+                      );
