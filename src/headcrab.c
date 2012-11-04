@@ -145,5 +145,7 @@ void headcrab_post_message( int _seqID, json_t* _message)
 	json_object_set(wrapper, "message", _message);
 	json_object_set_new(wrapper, "seqID", json_integer(-1));
 
+	LOG_MSG("Pushing message onto out-queue.\n");
 	mq_push(MQ_OUT, wrapper);
+	websocket_notify();
 }
