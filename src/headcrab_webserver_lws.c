@@ -47,7 +47,7 @@ enum demo_protocols {
 };
 
 
-#define LOCAL_RESOURCE_PATH "./"
+#define LOCAL_RESOURCE_PATH "./src"
 
 /* this protocol server (always the first one) just knows how to do HTTP */
 
@@ -71,7 +71,6 @@ static int callback_http(struct libwebsocket_context *context,
 		}
 
 		/* send the script... when it runs it'll start websockets */
-
 		if (libwebsockets_serve_http_file(wsi,
 				  LOCAL_RESOURCE_PATH"/test.html", "text/html"))
 			fprintf(stderr, "Failed to send HTTP file\n");
@@ -120,6 +119,8 @@ callback_command(	struct libwebsocket_context *context,
 					void *user, void *in, size_t len)
 {
 	int n;
+	json_t *message;
+	char *buffer;
 
 	switch (reason) {
 
@@ -136,7 +137,7 @@ callback_command(	struct libwebsocket_context *context,
 		//				  LWS_SEND_BUFFER_POST_PADDING);
 		//unsigned char *p = &buffer[LWS_SEND_BUFFER_PRE_PADDING];
 
-		json_t *message = json_loads(in, len, &error);
+		message = json_loads(in, len, &error);
 
 		// print more informative error
     	LOG_ERROR(error.text);
@@ -145,6 +146,47 @@ callback_command(	struct libwebsocket_context *context,
     	LOG_MSG("Pushing message onto in-queue.\n");
 		mq_push(MQ_IN, message);
 		break;
+	case LWS_CALLBACK_BROADCAST:
+	case LWS_CALLBACK_SERVER_WRITEABLE:
+		LOG_MSG("Pulling message from out-queue.\n");
+		message = (json_t *)mq_pop(MQ_OUT);
+		if (NULL == message)
+		{
+			break;
+		}
+		char* json_message = json_dumps(message, JSON_COMPACT);
+		json_decref(message);
+		if (NULL == json_message)
+		{
+			LOG_ERROR("JSON dumps as empty string!\n");
+		}
+		n = strlen(json_message);
+		LOG_MSG("Message: %s\n", json_message);
+
+		buffer = malloc(LWS_SEND_BUFFER_PRE_PADDING + n
+							+ LWS_SEND_BUFFER_POST_PADDING);
+		if (NULL == buffer)
+		{
+			LOG_ERROR("Unable to allocate string for outbound message.\n");
+			exit(1);
+		}
+
+		memcpy(&buffer[LWS_SEND_BUFFER_PRE_PADDING], json_message, n);
+
+		free(json_message);
+
+		n = libwebsocket_write(wsi, &buffer[LWS_SEND_BUFFER_PRE_PADDING], n, LWS_WRITE_TEXT);
+		free(buffer);
+		if (n < 0)
+		{
+			LOG_ERROR("Could not write to socket.\n");
+			exit(1);
+		}
+
+		//libwebsocket_rx_flow_control(wsi, 1);
+		libwebsocket_callback_on_writable(context, wsi);
+		break;
+
 	default:
 		break;
 	}
@@ -182,6 +224,16 @@ void* websocket_thread(void *arg)
 	libwebsocket_context_destroy(context);
 
 	return NULL;
+}
+
+void websocket_notify()
+{
+	unsigned char buf[LWS_SEND_BUFFER_PRE_PADDING + 1 + LWS_SEND_BUFFER_POST_PADDING];
+	buf[LWS_SEND_BUFFER_PRE_PADDING] = '!';
+
+	libwebsockets_broadcast(
+		&protocols[PROTOCOL_COMMAND],
+		&buf[LWS_SEND_BUFFER_PRE_PADDING], 1);
 }
 
 int websocket_initialize(const char * _assetDir)
