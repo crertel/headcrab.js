@@ -1,34 +1,87 @@
 #include "headcrab_dispatch.h"
 
+
 /*
-	Adds the entry to the dispatch table.
+	Removes the node with the name _name from the table, including all handlers
+	for that name.
+
+	Pre: _name is not the name of the first object node in the table
 */
-void dispatch_table_add(HC_ObjectNode* _table,
-						void* _target,
-                        const char* _name,
-                        const char* _verb,
-                        HC_PreOpFucntion _preOp,
-                        const void* _preOpArgs,
-                        HC_MutatorFunction _op,
-                        HC_PostOpFucntion _postOp,
-                        const void* _postOpArgs
-                        )
+void dispatch_table_remove(HC_ObjectNode* _table, const char* _name)
 {
-	HC_ObjectNode* node;
-	add_or_find_node(&node, _table, _target, _name);
-	node_add_handler(node, _verb, _preOp, _preOpArgs, _postOp, _postOpArgs, _op);
+	HC_ObjectNode *prev_node, *cur_node;
+	prev_node = NULL;
+	cur_node = _table;
+
+	for(; cur_node != NULL; cur_node = cur_node->next)
+	{
+		if (0 == strcmp(cur_node->name, _name))
+		{
+			// first table element is global object, so prev_node is never null
+			prev_node->next = cur_node->next;
+			free_node(cur_node);
+			break;
+		}
+	}
 }
 
 /*
-	Tries to find the object node in the table. If it is found, sets returns the
-	pointer via out. Otherwise, allocates a new node, adds it to the list,
-	and returns a pointer to the node via out.
+	Frees all the memory used by node and its related handlers.
 */
-void add_or_find_node(  HC_ObjectNode** out,
-						HC_ObjectNode* _table,
-						void* _target,
-						const char* _name
-					  )
+void free_node(HC_ObjectNode* _node)
+{
+	HC_Handler *next_handler, *cur_handler;
+	next_handler = cur_handler = _node->handler;
+
+	while(next_handler != NULL)
+	{
+		next_handler = cur_handler->next;
+		free(cur_handler->name);
+		free(cur_handler);
+	}
+
+	free(_node->name);
+	free(_node);
+}
+
+/*
+	Adds the entry to the dispatch table. If a different object node already 
+	using that name is found, returns HC_FAIL. Otherwise, allocates a new node,
+	adds it to the list, sets out to the pointer, and returns HC_SUCCESS.
+*/
+HEADCRAB_ERROR dispatch_table_add(	HC_ObjectNode* _table,
+									void* _target,
+			                        const char* _name,
+			                        const char* _verb,
+			                        HC_PreOpFucntion _preOp,
+			                        const void* _preOpArgs,
+			                        HC_MutatorFunction _op,
+			                        HC_PostOpFucntion _postOp,
+			                        const void* _postOpArgs
+									)
+{
+	HC_ObjectNode* node;
+	HEADCRAB_ERROR ret;
+
+	if (HC_SUCCESS != (ret = add_or_find_node(&node, _table, _target, _name)))
+	{
+		return ret;
+	}
+	node_add_handler(node, _verb, _preOp, _preOpArgs, _postOp, _postOpArgs, _op);
+	return HC_SUCCESS;
+}
+
+/*
+	Tries to find the object node in the table. If it is found, sets out to the
+	pointer. If an object node already using that name is found, returns
+	HC_FAIL. Otherwise, allocates a new node, adds it to the list, sets out to
+	the pointer, and returns HC_SUCCESS.
+*/
+HEADCRAB_ERROR add_or_find_node(HC_ObjectNode** out,
+								HC_ObjectNode* _table,
+								void* _target,
+								const char* _name
+					 			)
 {
 	HC_ObjectNode *prev_node, *cur_node, *new_node;
 
@@ -41,8 +94,8 @@ void add_or_find_node(  HC_ObjectNode** out,
 		{
 			if (cur_node->object != _target)
 			{
-				// TODO log duplicate name error
-				return;
+				LOG_MSG("Could not add node: duplicate name")
+				return HC_FAIL;
 			}
 			else
 			{
@@ -59,7 +112,7 @@ void add_or_find_node(  HC_ObjectNode** out,
 		new_node = malloc(sizeof(HC_ObjectNode));
 		if (new_node == NULL)
 		{
-			// TODO log fatal error
+			LOG_ERROR("Unable to malloc HC_ObjectNode in add_or_find_node");
 			exit(0);
 		}
 
@@ -71,11 +124,11 @@ void add_or_find_node(  HC_ObjectNode** out,
 	}
 
 	*out = cur_node;
+	return HC_SUCCESS;
 }
 
 /*
-	Attempts to add a handler to the node. If a handler with the same name,
-	already exists, does nothing. Otherwise, adds the handler.
+	Adds a new handler for the specified verb to the node.
 */
 void node_add_handler(	HC_ObjectNode* node,
                         const char* _verb,
@@ -86,38 +139,27 @@ void node_add_handler(	HC_ObjectNode* node,
                         const void* _postOpArgs
                       )
 {
-	HC_Handler *prev_handler, *cur_handler, *new_handler;
+	HC_Handler *handler, *new_handler;
 
 	// Make the new handler
 	new_handler = malloc(sizeof(HC_Handler));
 	if (NULL == new_handler)
 	{
-		// TODO log fatal error
+		LOG_ERROR("Unable to malloc HC_Handler in node_add_handler");
 		exit(0);
 	}
 
 	new_handler = {_verb, NULL, _preOp, _postOp, _preOpArgs, _postOpArgs, _op);
 
-	// If this will be the first handler, add and exit.
 	if (NULL == node->handler)
 	{
+		// If this will be the first handler, replace node->handler
 		node->handler = new_handler;
 	}
 	else
 	{
-		// Search for a duplicate handler
-		cur_handler = node->handler;
-		prev_handler = NULL;
-		while(NULL != cur_handler)
-		{
-			if (0 == strcmp(handler->name, handlerName))
-			{
-				// TODO log duplicate error
-				return;
-			}
-			prev_handler = cur_handler;
-			cur_handler = cur_handler->next;
-		}
-		cur_handler->next = new_handler;
+		// Otherwise, add new handler to the end of the list
+		for(handler = node->handler; NULL != handler->next; handler = handler->next);
+		handler->next = new_handler;
 	}
 }
