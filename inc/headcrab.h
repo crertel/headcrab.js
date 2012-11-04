@@ -135,4 +135,9 @@ void headcrab_rebind_object( const char* _name, void* _object);
 */
 void headcrab_handle_commands();
 
+/*
+    Posts a message to the client.
+*/
+void headcrab_post_message( int _seqID, json_t* _message);
+
 #endif
