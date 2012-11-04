@@ -54,8 +54,15 @@ int opShutdown(void* _target, const json_t* _args)
 
 int opGet(void* _target, const json_t* _args)
 {
+    json_t* msg;
+    json_t* value;
+
+    msg = json_object();
+    value = json_real(accum);
     
-    // TODO: send value back to server.
+    json_object_set_new(msg, "newval", value);
+    headcrab_post_command(-1, msg);
+    json_decref(msg);
 
     return HC_SUCCESS;
 }
