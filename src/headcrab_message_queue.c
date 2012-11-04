@@ -1,10 +1,14 @@
-typedef struct
+#include <stdlib.h>
+#include "headcrab.h"
+#include "headcrab_message_queue.h"
+
+typedef struct HC_QNode
 {
-	HC_QNode* next;
+	struct HC_QNode* next;
 	void* value;
 } HC_QNode;
 
-typedef struct
+typedef struct HC_Queue
 {
 	HC_QNode* head;
 	HC_QNode* tail;
@@ -57,12 +61,12 @@ void* _mq_pop(HC_Queue* q)
 	return data;
 }
 
-void mq_push(enum MQ queue, void* value)
+void mq_push(MQ queue, void* value)
 {
-	_mq_push(queues[queue], value);
+	_mq_push(&queues[queue], value);
 }
 
-void* mq_pop(enum MQ queue)
+void* mq_pop(MQ queue)
 {
-	return _mq_pop(queues[queue]);
+	return _mq_pop(&queues[queue]);
 }

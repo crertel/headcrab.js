@@ -2,7 +2,7 @@
 #ifndef _HEADCRAB_WEBSERVER_H
 #define _HEADCRAB_WEBSERVER_H
 
-int websocket_initialize(char *);
+int websocket_initialize(const char * _assetDir);
 
 void websocket_shutdown();
 

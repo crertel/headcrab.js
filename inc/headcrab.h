@@ -52,9 +52,9 @@ extern HC_LogFunction log_call;
     It is used for informational log messages only.
 */
 #ifdef DEBUG    
-#define LOG_MSG(x, ...) (log_call(x, __VA_ARGS__))
+#define LOG_MSG(...) (log_call(__VA_ARGS__))
 #else
-#define LOG_MSG(x, ...) (void)(x)
+#define LOG_MSG(...)
 #endif
 
 /*
@@ -62,9 +62,9 @@ extern HC_LogFunction log_call;
     It is used in exceptional situations, when things have gone horribly wrong.
 */
 #ifdef DEBUG
-#define LOG_ERROR(x, ...) (fprintf(stderr, x, ...))
+#define LOG_ERROR(...) (fprintf(stderr, __VA_ARGS__))
 #else
-#define LOG_ERROR(x, ...) (void)(x)
+#define LOG_ERROR(...)
 #endif
 
 /*

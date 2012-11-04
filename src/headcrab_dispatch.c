@@ -163,7 +163,7 @@ HC_ObjectNode* find_node(const char* _name)
 			return node;
 		}
 	}
-	return null;
+	return NULL;
 }
 
 

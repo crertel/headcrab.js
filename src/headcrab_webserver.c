@@ -1,5 +1,5 @@
-#include "headcrab.h"
 #include "mongoose.h"
+#include "headcrab.h"
 
 struct mg_context * ctx;
 
@@ -19,7 +19,7 @@ static void * websocket_message_handler(enum mg_event event,
 	return NULL;
 }
 
-int websocket_initialize(char * _assetDir)
+int websocket_initialize(const char * _assetDir)
 {
 	// Set options.
 	const char * options[] = {

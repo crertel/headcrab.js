@@ -1,6 +1,7 @@
 #include "headcrab.h"
 #include "headcrab_webserver.h"
 #include "headcrab_dispatch.h"
+#include "headcrab_message_queue.h"
 #include <string.h>
 
 HC_LogFunction log_call = printf;
@@ -8,7 +9,7 @@ HC_LogFunction log_call = printf;
 HEADCRAB_ERROR headcrab_init(const char* _assetDir)
 {
 	// Default logging goes to stdout.
-	log_call = printf;
+	//log_call = printf;
 	// Initialize the dispatch table.
 	dispatch_table_init();
 	// Start Websocket Server.
@@ -82,7 +83,7 @@ void dispatch(json_t *message)
 	json_t *type, *target, *command, *args, *seqID;
 
 	type = json_object_get(message, "type");
-	if (!json_is_string(type) || strcmp(json_string_value, "command"))
+	if (!json_is_string(type) || strcmp(json_string_value(type), "command"))
 	{
 		// reply: bad message
 		return;
@@ -106,7 +107,7 @@ void dispatch(json_t *message)
 	json_incref(args);
 
 	seqID = json_object_get(message, "seqID");
-	if (!json_integer(seqID))
+	if (!json_integer_value(seqID))
 	{
 		// reply: bad message
 		return;
