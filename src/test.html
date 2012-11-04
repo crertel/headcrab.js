@@ -14,7 +14,6 @@
 
     websocket.onopen = function(ev) {
       writeToScreen('CONNECTED');
-      alert("Stringify!");
       var message = JSON.stringify({
         type: "command",
         target: "a",
@@ -22,7 +21,6 @@
         args: {test: 1},
         seqID: 1
       });
-      alert(message);
       writeToScreen('SENT: ' + message);
       websocket.send(message);
     };

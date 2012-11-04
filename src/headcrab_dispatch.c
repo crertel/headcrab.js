@@ -196,6 +196,11 @@ void dispatch_table_execute(const char* _target,
 {
 
 	HC_ObjectNode* node = find_node(_target);
+	if (NULL == node)
+	{
+		return;
+	}
+
 	HC_Handler* handler = node->handler;
 	for(; NULL != handler; handler = handler->next)
 	{
