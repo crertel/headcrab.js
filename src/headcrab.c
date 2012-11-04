@@ -121,6 +121,7 @@ void dispatch(json_t *message)
 	}
 
 	LOG_MSG("Dispatching on message.\n");
+	json_object_set(args, "seqID", seqID);
 	dispatch_table_execute( json_string_value(target),
 							json_string_value(command),
 							args);
@@ -143,7 +144,7 @@ void headcrab_post_message( int _seqID, json_t* _message)
 {
 	json_t* wrapper = json_object();
 	json_object_set(wrapper, "message", _message);
-	json_object_set_new(wrapper, "seqID", json_integer(-1));
+	json_object_set_new(wrapper, "seqID", json_integer(_seqID));
 
 	LOG_MSG("Pushing message onto out-queue.\n");
 	mq_push(MQ_OUT, wrapper);
