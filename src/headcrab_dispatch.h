@@ -31,17 +31,17 @@ void dispatch_table_remove(const char* _name);
 
 void dispatch_table_rebind(const char* _name, void* _target);
 
-HEADCRAB_ERROR dispatch_table_add(  void* _target,
-			                        const char* _name,
-			                        const char* _verb,
-			                        HC_PreOpFunction _preOp,
-			                        const void* _preOpArgs,
-			                        HC_MutatorFunction _op,
-			                        HC_PostOpFunction _postOp,
-			                        const void* _postOpArgs
-									);
+void dispatch_table_add(    void* _target,
+                            const char* _name,
+                            const char* _verb,
+                            HC_PreOpFunction _preOp,
+                            const void* _preOpArgs,
+                            HC_MutatorFunction _op,
+                            HC_PostOpFunction _postOp,
+                            const void* _postOpArgs
+    						);
 
-HEADCRAB_ERROR add_or_find_node(HC_ObjectNode** out,
+void add_or_find_node(HC_ObjectNode** out,
 								void* _target,
 								const char* _name
 					 			);

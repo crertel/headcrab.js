@@ -77,25 +77,20 @@ void free_node(HC_ObjectNode* _node)
 	using that name is found, returns HC_FAIL. Otherwise, allocates a new node,
 	adds it to the list, sets out to the pointer, and returns HC_SUCCESS.
 */
-HEADCRAB_ERROR dispatch_table_add(	void* _target,
-			                        const char* _name,
-			                        const char* _verb,
-			                        HC_PreOpFunction _preOp,
-			                        const void* _preOpArgs,
-			                        HC_MutatorFunction _op,
-			                        HC_PostOpFunction _postOp,
-			                        const void* _postOpArgs
-									)
+void dispatch_table_add(	void* _target,
+	                        const char* _name,
+	                        const char* _verb,
+	                        HC_PreOpFunction _preOp,
+	                        const void* _preOpArgs,
+	                        HC_MutatorFunction _op,
+	                        HC_PostOpFunction _postOp,
+	                        const void* _postOpArgs
+							)
 {
 	HC_ObjectNode* node;
-	HEADCRAB_ERROR ret;
 
-	if (HC_SUCCESS != (ret = add_or_find_node(&node, _target, _name)))
-	{
-		return ret;
-	}
+	add_or_find_node(&node, _target, _name);
 	node_add_handler(node, _verb, _preOp, _preOpArgs, _op, _postOp, _postOpArgs);
-	return HC_SUCCESS;
 }
 
 /*
@@ -104,7 +99,7 @@ HEADCRAB_ERROR dispatch_table_add(	void* _target,
 	HC_FAIL. Otherwise, allocates a new node, adds it to the list, sets out to
 	the pointer, and returns HC_SUCCESS.
 */
-HEADCRAB_ERROR add_or_find_node(HC_ObjectNode** out,
+void add_or_find_node(HC_ObjectNode** out,
 								void* _target,
 								const char* _name
 					 			)
@@ -118,16 +113,8 @@ HEADCRAB_ERROR add_or_find_node(HC_ObjectNode** out,
 	{
 		if (0 == strcmp(cur_node->name, _name))
 		{
-			if (cur_node->object != _target)
-			{
-				LOG_MSG("Could not add node: duplicate name.\n");
-				return HC_FAIL;
-			}
-			else
-			{
-				// We found a match!
-				break;
-			}
+			// We found a match!
+			break;
 		}
 		prev_node = cur_node;
 		cur_node = cur_node->next;
@@ -150,7 +137,6 @@ HEADCRAB_ERROR add_or_find_node(HC_ObjectNode** out,
 	}
 
 	*out = cur_node;
-	return HC_SUCCESS;
 }
 
 HC_ObjectNode* find_node(const char* _name)

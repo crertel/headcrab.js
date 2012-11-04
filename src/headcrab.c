@@ -48,6 +48,12 @@ void headcrab_bind_object(  void* _target,
                             const void* _postOpArgs
                         )
 {
+	// We don't allow null verbs.
+	if (_verb == NULL)
+	{
+		return;
+	}
+
 	// Copy the strings.
 	char * name = malloc((strlen(_name) + 1) * sizeof(*_name));
 	strcpy(name, _name);

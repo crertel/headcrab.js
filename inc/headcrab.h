@@ -25,13 +25,13 @@ typedef int (*HC_LogFunction)(const char* fmt, ...);
     HC_PreOpFunction is a function pointer that will be called before accessing an object, and passed arguments needed to do its work.
     This is useful, for example, when needing to acquire a mutex for safety in accessing a variable.
 */
-typedef HEADCRAB_ERROR (*HC_PreOpFunction)(const void* _args);
+typedef HEADCRAB_ERROR (*HC_PreOpFunction)(void* _args);
 
 /*
     HC_PostOpFunction is a function pointer that will be called after accessing an object, and passed arguments needed to do its work.
     This is useful, for example, when needing to release a previously acquired mutex.
 */
-typedef HEADCRAB_ERROR (*HC_PostOpFunction)(const void* _args);
+typedef HEADCRAB_ERROR (*HC_PostOpFunction)(void* _args);
 
 /*
     HC_MutatorFunction is a function pointer that will be called to change an object when prompted by the web interface.
