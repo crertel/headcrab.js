@@ -14,6 +14,7 @@ int actually_fprintf(const char * stuff, ...)
 int main(int argc, char ** argv)
 {
 	headcrab_init("./");
+
 	for(;;)
 	{
 		headcrab_handle_commands();
