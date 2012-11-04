@@ -1,15 +1,12 @@
 #include "headcrab.h"
 #include "headcrab_dispatch.h"
 
-HC_ObjectNode * dispatch_table;
-
 HEADCRAB_ERROR headcrab_init(const char* _assetDir)
 {
 	// Default logging goes to stdout.
 	log_call = printf;
 	// Initialize the dispatch table.
-	dispatch_table = malloc(sizeof(*new_node));
-	dispatch_table = { "", NULL, NULL, NULL };
+	dispatch_table_init();
 	// Start Websocket Server.
 	LOG_MSG("Connecting to server.");
 	if ( websocket_initialize(_assetDir) ) {

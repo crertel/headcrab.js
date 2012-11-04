@@ -1,17 +1,29 @@
 #include "headcrab_dispatch.h"
 
+static HC_ObjectNode * dispatch_table;
+
+void dispatch_table_init()
+{
+	dispatch_table = malloc(sizeof(*new_node));
+	if (NULL == dispatch_table)
+	{
+		LOG_ERROR("Could not allocate new HC_ObjectNode in dispatch_table_init");
+		exit(0);
+	}
+	dispatch_table = { "", NULL, NULL, NULL };
+}
 
 /*
-	If there is a node with the name _name in _table, rebinds the node to use
-	_target as its object. If there is no such node, does nothing.
+	If there is a node with the name _name in dispatch_table, rebinds the node 
+	to use _target as its object. If there is no such node, does nothing.
 */
-void dispatch_table_rebind(HC_ObjectNode* _table, const char* _name, void* _target)
+void dispatch_table_rebind(const char* _name, void* _target)
 {
-	for(; _table != NULL; _table++)
+	for(; dispatch_table != NULL; dispatch_table++)
 	{
-		if (0 == strcmp(_table->name, _name))
+		if (0 == strcmp(dispatch_table->name, _name))
 		{
-			_table->object = _target;
+			dispatch_table->object = _target;
 		}
 	}
 }
@@ -22,11 +34,11 @@ void dispatch_table_rebind(HC_ObjectNode* _table, const char* _name, void* _targ
 
 	Pre: _name is not the name of the first object node in the table
 */
-void dispatch_table_remove(HC_ObjectNode* _table, const char* _name)
+void dispatch_table_remove(const char* _name)
 {
 	HC_ObjectNode *prev_node, *cur_node;
 	prev_node = NULL;
-	cur_node = _table;
+	cur_node = dispatch_table;
 
 	for(; cur_node != NULL; cur_node = cur_node->next)
 	{
@@ -64,8 +76,7 @@ void free_node(HC_ObjectNode* _node)
 	using that name is found, returns HC_FAIL. Otherwise, allocates a new node,
 	adds it to the list, sets out to the pointer, and returns HC_SUCCESS.
 */
-HEADCRAB_ERROR dispatch_table_add(	HC_ObjectNode* _table,
-									void* _target,
+HEADCRAB_ERROR dispatch_table_add(	void* _target,
 			                        const char* _name,
 			                        const char* _verb,
 			                        HC_PreOpFucntion _preOp,
@@ -78,7 +89,7 @@ HEADCRAB_ERROR dispatch_table_add(	HC_ObjectNode* _table,
 	HC_ObjectNode* node;
 	HEADCRAB_ERROR ret;
 
-	if (HC_SUCCESS != (ret = add_or_find_node(&node, _table, _target, _name)))
+	if (HC_SUCCESS != (ret = add_or_find_node(&node, dispatch_table, _target, _name)))
 	{
 		return ret;
 	}
@@ -93,7 +104,6 @@ HEADCRAB_ERROR dispatch_table_add(	HC_ObjectNode* _table,
 	the pointer, and returns HC_SUCCESS.
 */
 HEADCRAB_ERROR add_or_find_node(HC_ObjectNode** out,
-								HC_ObjectNode* _table,
 								void* _target,
 								const char* _name
 					 			)
@@ -102,7 +112,7 @@ HEADCRAB_ERROR add_or_find_node(HC_ObjectNode** out,
 
 	// Search for the target's entry
 	prev_node = NULL;
-	cur_node = _table;
+	cur_node = dispatch_table;
 	while(NULL != cur_node)
 	{
 		if (0 == strcmp(cur_node->name, _name))

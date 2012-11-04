@@ -9,7 +9,7 @@ typedef struct
 typedef struct
 {
 	char * name;
-	HC_Handler * next;
+	HC_Hlandler * next;
 	HC_PreOpFunction * pre;
 	HC_PostOpFunction * post;
 	void * preArgs;
@@ -17,10 +17,11 @@ typedef struct
 	HC_MutatorFunction * op;
 } HC_Handler;
 
-void dispatch_table_remove(HC_ObjectNode* _table, const char* _name);
+void dispatch_table_init();
 
-HEADCRAB_ERROR dispatch_table_add(	HC_ObjectNode* _table,
-									void* _target,
+void dispatch_table_remove(const char* _name);
+
+HEADCRAB_ERROR dispatch_table_add(  void* _target,
 			                        const char* _name,
 			                        const char* _verb,
 			                        HC_PreOpFucntion _preOp,
@@ -31,7 +32,6 @@ HEADCRAB_ERROR dispatch_table_add(	HC_ObjectNode* _table,
 									);
 
 HEADCRAB_ERROR add_or_find_node(HC_ObjectNode** out,
-								HC_ObjectNode* _table,
 								void* _target,
 								const char* _name
 					 			);
