@@ -45,7 +45,7 @@ typedef void (*HC_MutatorFunction)(void* _target, const json_t* _args);
     It can be specified by the user for custom logging.
     By default, it points to printf().
 */
-HC_LogFunction log_call;
+extern HC_LogFunction log_call;
 
 /*
     LOG_MSG logs a message to the log_call function, which is printf by default.

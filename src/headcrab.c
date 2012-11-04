@@ -3,6 +3,8 @@
 #include "headcrab_dispatch.h"
 #include <string.h>
 
+HC_LogFunction log_call = printf;
+
 HEADCRAB_ERROR headcrab_init(const char* _assetDir)
 {
 	// Default logging goes to stdout.
