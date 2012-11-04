@@ -53,9 +53,11 @@ void queue_enqueue(queue_t *queue, void *value)
 
 void *queue_dequeue(queue_t *queue)
 {
+	LOG_MSG("Before mutex!\n");
 	pthread_mutex_lock(&(queue->mutex));
 	if (queue->size == 0)
 	{
+		pthread_mutex_unlock(&(queue->mutex));
 		return NULL;
 	}
 		
