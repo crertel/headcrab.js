@@ -119,9 +119,9 @@ void dispatch(json_t *message)
 
 void headcrab_handle_commands()
 {
-	json_t *command = mq_pop(MQ_IN);
+	json_t *command = (json_t *)mq_pop(MQ_IN);
 
-	for(; NULL != command; command = mq_pop(MQ_IN))
+	for(; NULL != command; command = (json_t *)mq_pop(MQ_IN))
 	{
 		dispatch(command);
 	}
