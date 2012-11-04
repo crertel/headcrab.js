@@ -1,8 +1,8 @@
-CFLAGS=	-W -Wall -pthread -g -I../inc -I../lib/mongoose
-LDFLAGS= -ldl -ljansson
+CFLAGS=	-W -Wall -pthread -g -I../inc
+LDFLAGS= -ldl -ljansson -lwebsockets -lz
 
 all:
-	$(CC) $(CFLAGS) -DUSE_WEBSOCKET -DDEBUG ../examples/unnamed_scientist.c headcrab.c headcrab_dispatch.c headcrab_webserver.c headcrab_message_queue.c ../lib/mongoose/mongoose.c $(LDFLAGS) $(ADD) -o webserver;
+	$(CC) $(CFLAGS) -DDEBUG ../examples/unnamed_scientist.c headcrab.c headcrab_dispatch.c headcrab_webserver_lws.c headcrab_message_queue.c $(LDFLAGS) $(ADD) -o webserver;
 
 
 MSVC    = e:/vc6
