@@ -8,17 +8,17 @@ typedef struct HC_Handler
 {
 	char * name;
 	struct HC_Handler * next;
-	HC_PreOpFunction * pre;
-	HC_PostOpFunction * post;
+	HC_PreOpFunction pre;
+	HC_PostOpFunction post;
 	void * preArgs;
 	void * postArgs;
-	HC_MutatorFunction * op;
+	HC_MutatorFunction op;
 } HC_Handler;
 
 typedef struct HC_ObjectNode
 {
 	char * name;
-	struct ObjectNode * next;
+	struct HC_ObjectNode * next;
 	struct HC_Handler * handler;
 	void * object;
 } HC_ObjectNode;

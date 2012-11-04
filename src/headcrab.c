@@ -1,5 +1,7 @@
 #include "headcrab.h"
+#include "headcrab_webserver.h"
 #include "headcrab_dispatch.h"
+#include <string.h>
 
 HEADCRAB_ERROR headcrab_init(const char* _assetDir)
 {
@@ -14,7 +16,10 @@ HEADCRAB_ERROR headcrab_init(const char* _assetDir)
 	} else {
 		LOG_ERROR("Failed to connect to server.\n");
 		headcrab_shutdown();
+		return HC_FAIL;
 	}
+
+	return HC_SUCCESS;
 }
 
 void headcrab_shutdown()
@@ -32,17 +37,17 @@ void headcrab_set_logging_callback( HC_LogFunction _callback)
 void headcrab_bind_object(  void* _target,
                             const char* _name,
                             const char* _verb,
-                            HC_PreOpFucntion _preOp,
+                            HC_PreOpFunction _preOp,
                             const void* _preOpArgs,
                             HC_MutatorFunction _op,
-                            HC_PostOpFucntion _postOp,
+                            HC_PostOpFunction _postOp,
                             const void* _postOpArgs
                         )
 {
 	// Copy the strings.
-	char * name = malloc(strlen(_name) * sizeof(*_name));
+	char * name = malloc((strlen(_name) + 1) * sizeof(*_name));
 	strcpy(name, _name);
-	char * verb = malloc(strlen(_verb) * sizeof(*_verb));
+	char * verb = malloc((strlen(_verb) + 1) * sizeof(*_verb));
 	strcpy(verb, _verb);
 	// Add to dispatch table.
 	dispatch_table_add(_target, name,
@@ -54,7 +59,7 @@ void headcrab_bind_object(  void* _target,
 void headcrab_clear_all_object_bindings( const char* _name )
 {
 	// Cannot delete the global namespace node.
-	if (*name == '\0')
+	if (*_name == '\0')
 		return;
 	dispatch_table_remove(_name);
 }

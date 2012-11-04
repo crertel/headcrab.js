@@ -1,16 +1,19 @@
+#include "headcrab.h"
 #include "mongoose.h"
 
 struct mg_context * ctx;
 
-static void * ws_message_handler(enum mg_event event,
+static void * websocket_message_handler(enum mg_event event,
 						  		 struct mg_connection *conn)
 {
-	if (event == MG_WEBSOCKET_READY) {
-		MSG_LOG("Server ready.\n");
+	if (event == MG_WEBSOCKET_CONNECT) {
+		LOG_MSG("Client connecting...\n");
+	} else if (event == MG_WEBSOCKET_READY) {
+		LOG_MSG("Server ready.\n");
 	} else if (event == MG_WEBSOCKET_MESSAGE) {
-		MSG_LOG("Received message.\n");
-	} else if (event == MG_WEBSOCKET_DUNNO) {
-
+		LOG_MSG("Received message.\n");
+	} else if (event == MG_WEBSOCKET_CLOSE) {
+		LOG_MSG("Server closed by client.\n");
 	}
 
 	return NULL;
@@ -25,7 +28,7 @@ int websocket_initialize(char * _assetDir)
 		NULL
 	};
 	// Start web server.
-	ctx = mg_start(&ws_message_handler, NULL, options);
+	ctx = mg_start(&websocket_message_handler, NULL, options);
 	if (!ctx)
 		return -1;
 	return 0;

@@ -4,13 +4,14 @@ static HC_ObjectNode * dispatch_table;
 
 void dispatch_table_init()
 {
+	HC_ObjectNode * new_node;
 	dispatch_table = malloc(sizeof(*new_node));
 	if (NULL == dispatch_table)
 	{
 		LOG_ERROR("Could not allocate new HC_ObjectNode in dispatch_table_init.\n");
 		exit(0);
 	}
-	dispatch_table = { "", NULL, NULL, NULL };
+	*dispatch_table = (HC_ObjectNode){ "", NULL, NULL, NULL };
 }
 
 /*
@@ -79,21 +80,21 @@ void free_node(HC_ObjectNode* _node)
 HEADCRAB_ERROR dispatch_table_add(	void* _target,
 			                        const char* _name,
 			                        const char* _verb,
-			                        HC_PreOpFucntion _preOp,
+			                        HC_PreOpFunction _preOp,
 			                        const void* _preOpArgs,
 			                        HC_MutatorFunction _op,
-			                        HC_PostOpFucntion _postOp,
+			                        HC_PostOpFunction _postOp,
 			                        const void* _postOpArgs
 									)
 {
 	HC_ObjectNode* node;
 	HEADCRAB_ERROR ret;
 
-	if (HC_SUCCESS != (ret = add_or_find_node(&node, dispatch_table, _target, _name)))
+	if (HC_SUCCESS != (ret = add_or_find_node(&node, _target, _name)))
 	{
 		return ret;
 	}
-	node_add_handler(node, _verb, _preOp, _preOpArgs, _postOp, _postOpArgs, _op);
+	node_add_handler(node, _verb, _preOp, _preOpArgs, _op, _postOp, _postOpArgs);
 	return HC_SUCCESS;
 }
 
@@ -119,7 +120,7 @@ HEADCRAB_ERROR add_or_find_node(HC_ObjectNode** out,
 		{
 			if (cur_node->object != _target)
 			{
-				LOG_MSG("Could not add node: duplicate name.\n")
+				LOG_MSG("Could not add node: duplicate name.\n");
 				return HC_FAIL;
 			}
 			else
@@ -141,7 +142,7 @@ HEADCRAB_ERROR add_or_find_node(HC_ObjectNode** out,
 			exit(0);
 		}
 
-		new_node = {_name, NULL, NULL, _target};
+		*new_node = (HC_ObjectNode){_name, NULL, NULL, _target};
 
 		prev_node->next = new_node;
 
@@ -157,10 +158,10 @@ HEADCRAB_ERROR add_or_find_node(HC_ObjectNode** out,
 */
 void node_add_handler(	HC_ObjectNode* node,
                         const char* _verb,
-                        HC_PreOpFucntion _preOp,
+                        HC_PreOpFunction _preOp,
                         const void* _preOpArgs,
                         HC_MutatorFunction _op,
-                        HC_PostOpFucntion _postOp,
+                        HC_PostOpFunction _postOp,
                         const void* _postOpArgs
                       )
 {
@@ -174,7 +175,7 @@ void node_add_handler(	HC_ObjectNode* node,
 		exit(0);
 	}
 
-	new_handler = {_verb, NULL, _preOp, _postOp, _preOpArgs, _postOpArgs, _op);
+	*new_handler = (HC_Handler){_verb, NULL, _preOp, _postOp, _op, _preOpArgs, _postOpArgs };
 
 	if (NULL == node->handler)
 	{

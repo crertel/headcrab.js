@@ -7,6 +7,7 @@
 #define _HEADCRAB_H
 
 #include <jansson.h> /* json_t type */
+#include <string.h>
 
 typedef enum HEADCRAB_ERROR
 {
@@ -18,13 +19,13 @@ typedef enum HEADCRAB_ERROR
 /*
     HC_LogFunciton is a function pointer to a printf-like function we use for internal logging.
 */
-typedef void (*HC_LogFunction)(const char* fmt, ...);
+typedef int (*HC_LogFunction)(const char* fmt, ...);
 
 /*
     HC_PreOpFunction is a function pointer that will be called before accessing an object, and passed arguments needed to do its work.
     This is useful, for example, when needing to acquire a mutex for safety in accessing a variable.
 */
-typedef HEADCRAB_ERROR (*HC_PostOpFunction)(const void* _args);
+typedef HEADCRAB_ERROR (*HC_PreOpFunction)(const void* _args);
 
 /*
     HC_PostOpFunction is a function pointer that will be called after accessing an object, and passed arguments needed to do its work.
@@ -53,7 +54,7 @@ HC_LogFunction log_call;
 #ifdef DEBUG    
 #define LOG_MSG(x, ...) (log_call(x, __VA_ARGS__))
 #else
-#define LOG_MSG
+#define LOG_MSG(x, ...) (void)(x)
 #endif
 
 /*
@@ -63,7 +64,7 @@ HC_LogFunction log_call;
 #ifdef DEBUG
 #define LOG_ERROR(x, ...) (fprintf(stderr, x, ...))
 #else
-#define LOG_ERROR
+#define LOG_ERROR(x, ...) (void)(x)
 #endif
 
 /*
@@ -105,10 +106,10 @@ void headcrab_set_logging_callback( HC_LogFunction _callback);
 void headcrab_bind_object(  void* _target,
                             const char* _name,
                             const char* _verb,
-                            HC_PreOpFucntion _preOp,
+                            HC_PreOpFunction _preOp,
                             const void* _preOpArgs,
                             HC_MutatorFunction _op,
-                            HC_PostOpFucntion _postOp,
+                            HC_PostOpFunction _postOp,
                             const void* _postOpArgs
                         );
 
