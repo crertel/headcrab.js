@@ -130,4 +130,9 @@ void headcrab_clear_all_object_bindings( const char* _name );
 */
 void headcrab_rebind_object( const char* _name, void* _object);
 
+/*
+    Handles all commands received via the websocket server since the last call.
+*/
+void headcrab_handle_commands();
+
 #endif

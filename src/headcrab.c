@@ -116,3 +116,13 @@ void dispatch(json_t *message)
 
 	json_decref(message);
 }
+
+void headcrab_handle_commands()
+{
+	json_t *command = mq_pop(MQ_IN);
+
+	for(; NULL != command; command = mq_pop(MQ_IN))
+	{
+		dispatch(command);
+	}
+}
