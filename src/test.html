@@ -1,93 +1,27 @@
 <!DOCTYPE html>  
 <meta charset="utf-8" />  
-<title>WebSocket Test</title>  
-<script language="javascript" type="text/javascript">
-  var unique_seqID = 1;
-  var writeToScreen = function(message) {
-    var div = document.createElement('div');
-    div.innerHTML = message;
-    document.getElementById('output').appendChild(div);
-  };
-  window.onload = function() {
-    var url = 'ws://localhost:8080';
-    websocket = new WebSocket(url, 'command');
+<head>
+  <title>WebSocket Test</title>
+  <script language="javascript" type="text/javascript" src="jquery-1.8.2.min.js"></script>
+  <script language="javascript" type="text/javascript" src="d3.v2.min.js"></script>
+  <script language="javascript" type="text/javascript" src="underscore-min.js"></script>
+  <script language="javascript" type="text/javascript" src="headcrab.js"></script>
+  <script language="javascript" type="text/javascript" src="boidDemo.js"></script>
+  <script language="javascript" type="text/javascript">
+    $(document).ready( function () {
+        HC.connect(123);
+    });
+  </script>
+</head>
 
-    websocket.onopen = function(ev) {
-      writeToScreen('CONNECTED');
-      var message = JSON.stringify({
-        type: "command",
-        target: "a",
-        command: "two",
-        args: {test: 1},
-        seqID: unique_seqID++
-      });
-      writeToScreen('SENT: ' + message);
-      websocket.send(message);
-    };
-    websocket.onclose = function(ev) {
-      writeToScreen('DISCONNECTED');
-    };
-    websocket.onmessage = function(ev) {
-      writeToScreen('<span style="color: blue;">RESPONSE: ' + ev.data +
-                    ' </span>');
-      websocket.send('exit');
-    };
-    websocket.onerror = function(ev) {
-      writeToScreen('<span style="color: red; ">ERROR: </span> ' + ev.data);
-    };
-  };
-</script>  
-<style> div {font: small Verdana; } </style>
-<h2>Mongoose WebSocket Test</h2>  
-
+<body>
+  <h2>Mongoose WebSocket Test</h2>  
   <div style="width: 400px; color: #aaa; padding: 1em; ">
   This page code creates websocket to the URI "/foo",
   sends a message to it, waits for the reply, then sends an "exit" message.
   Server must echo all messages back, and terminate the conversation after
   receiving the "exit" message.
   </div>
-<script type="text/javascript">
-  var disconnect = function() {
-    writeToScreen('MANUALLY DISONNECTING');
-    var message = JSON.stringify({
-        type: "command",
-        target: "",
-        command: "shutdown",
-        args: {test: 1},
-        seqID: unique_seqID++
-      });
-      writeToScreen('SENT: ' + message);
-      websocket.send(message);
-  };
-  var accum_add = function() {
-    writeToScreen('MANUALLY DISONNECTING');
-    var message = JSON.stringify({
-        type: "command",
-        target: "accum",
-        command: "add",
-        args: { val: 12.0 },
-        seqID: unique_seqID++
-      });
-      writeToScreen('SENT: ' + message);
-      websocket.send(message);
-  };
-  var accum_read = function() {
-    writeToScreen('MANUALLY DISONNECTING');
-    var message = JSON.stringify({
-        type: "command",
-        target: "accum",
-        command: "read",
-        args: {},
-        seqID: unique_seqID++
-      });
-      writeToScreen('SENT: ' + message);
-      websocket.send(message);
-  };
+</body>
 
-</script>
-  <input type="button" value="Disconnect" onclick="disconnect()"></input><br />
-  <input type="button" value="Accum Add" onclick="accum_add()"></input><br />
-  <input type="button" value="Accum Read" onclick="accum_read()"></input>
-
-<div id="output"></div>  
 </html>
