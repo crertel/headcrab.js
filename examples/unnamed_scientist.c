@@ -8,7 +8,7 @@ int customLog(const char* fmt, ...)
     va_list args;
     
     va_start(args,fmt);
-    vfprintf(stderr,"HEADCRAB SAYS: ");
+    fprintf(stderr,"HEADCRAB SAYS: ");
     count = vfprintf(stderr, fmt, args);
     va_end(args);
 
@@ -61,7 +61,7 @@ int opGet(void* _target, const json_t* _args)
     value = json_real(accum);
     
     json_object_set_new(msg, "newval", value);
-    headcrab_post_command(-1, msg);
+    headcrab_post_message(-1, msg);
     json_decref(msg);
 
     return HC_SUCCESS;
