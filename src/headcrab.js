@@ -34,7 +34,7 @@ var HC = (function() {
     };
 
     var issue = function( target, cmd, args, onReply) {
-        alert("Issuing command " + cmd + " to " + target);
+        //alert("Issuing command " + cmd + " to " + target);
 
         // if a reply is expected, we need to remember that.
         expectedCommands[ nextSeqID ] = onReply;
