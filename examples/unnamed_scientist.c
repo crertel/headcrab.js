@@ -30,12 +30,12 @@ void opAccum(void* _target, const json_t* _args)
     if (incval == NULL || !json_is_number(incval) )
     {
         printf("Malformed increment op arg!\n");
-        return HC_FAIL;
+        return;
     }
 
     *((double*)_target) += json_number_value(incval);
 
-    return HC_SUCCESS;
+    return;
 }
 
 HEADCRAB_ERROR postHook(void* _target)
@@ -48,6 +48,7 @@ static int shouldShutdown = 0;
 
 void opShutdown(void* _target, const json_t* _args)
 {
+	LOG_MSG("Shutting down handler.\n");
     shouldShutdown = 1;
 }
 

@@ -208,13 +208,18 @@ void dispatch_table_execute(const char* _target,
 		{
 			if (handler->pre != NULL)
 			{
+				LOG_MSG("Executing preOp handle.\n");
 				handler->pre(handler->preArgs);
 			}
 			
+			if (handler->op == NULL)
+				LOG_ERROR("No op handle exists!\n");
+			LOG_MSG("Executing op handle.\n");
 			handler->op(node->object, args);
 
 			if (handler->post != NULL)
 			{
+				LOG_MSG("Executing postOp handle.\n");
 				handler->post(handler->postArgs);	
 			}
 		}

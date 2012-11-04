@@ -53,7 +53,7 @@ void headcrab_bind_object(  void* _target,
 	{
 		return;
 	}
-
+	LOG_MSG("Binding: %s to %s.\n", _name, _verb);
 	// Copy the strings.
 	char * name = malloc((strlen(_name) + 1) * sizeof(*_name));
 	strcpy(name, _name);
@@ -83,7 +83,7 @@ void dispatch(json_t *message)
 {
 	if (!json_is_object(message))
 	{
-		// reply: bad message
+		LOG_ERROR("JSON message is not an object!\n");
 		return;
 	}
 	
@@ -92,21 +92,21 @@ void dispatch(json_t *message)
 	type = json_object_get(message, "type");
 	if (!json_is_string(type) || strcmp(json_string_value(type), "command"))
 	{
-		// reply: bad message
+		LOG_ERROR("JSON type is not a string!\n");
 		return;
 	}
 
 	target = json_object_get(message, "target");
 	if (!json_is_string(target))
 	{
-		// reply: bad message
+		LOG_ERROR("JSON target is not a string!\n");
 		return;
 	}
 
 	command = json_object_get(message, "command");
 	if (!json_is_string(command))
 	{
-		// reply: bad message
+		LOG_ERROR("JSON command is not a string!\n");
 		return;
 	}
 
@@ -116,11 +116,11 @@ void dispatch(json_t *message)
 	seqID = json_object_get(message, "seqID");
 	if (!json_integer_value(seqID))
 	{
-		// reply: bad message
+		LOG_ERROR("JSON seqID is not an integer!\n");
 		return;
 	}
 
-	LOG_MSG("Dispatching on message.");
+	LOG_MSG("Dispatching on message.\n");
 	dispatch_table_execute( json_string_value(target),
 							json_string_value(command),
 							args);
