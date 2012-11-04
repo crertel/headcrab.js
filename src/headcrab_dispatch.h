@@ -1,7 +1,7 @@
 typedef struct
 {
 	char * name;
-	ObjectNode * next;
+	HC_ObjectNode * next;
 	HC_Handler * handler;
 	void * object;
 } HC_ObjectNode;
@@ -9,7 +9,7 @@ typedef struct
 typedef struct
 {
 	char * name;
-	HC_Hlandler * next;
+	HC_Handler * next;
 	HC_PreOpFunction * pre;
 	HC_PostOpFunction * post;
 	void * preArgs;
