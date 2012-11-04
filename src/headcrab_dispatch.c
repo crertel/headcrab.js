@@ -7,7 +7,7 @@ void dispatch_table_init()
 	dispatch_table = malloc(sizeof(*new_node));
 	if (NULL == dispatch_table)
 	{
-		LOG_ERROR("Could not allocate new HC_ObjectNode in dispatch_table_init");
+		LOG_ERROR("Could not allocate new HC_ObjectNode in dispatch_table_init.\n");
 		exit(0);
 	}
 	dispatch_table = { "", NULL, NULL, NULL };
@@ -119,7 +119,7 @@ HEADCRAB_ERROR add_or_find_node(HC_ObjectNode** out,
 		{
 			if (cur_node->object != _target)
 			{
-				LOG_MSG("Could not add node: duplicate name")
+				LOG_MSG("Could not add node: duplicate name.\n")
 				return HC_FAIL;
 			}
 			else
@@ -137,7 +137,7 @@ HEADCRAB_ERROR add_or_find_node(HC_ObjectNode** out,
 		new_node = malloc(sizeof(HC_ObjectNode));
 		if (new_node == NULL)
 		{
-			LOG_ERROR("Unable to malloc HC_ObjectNode in add_or_find_node");
+			LOG_ERROR("Unable to malloc HC_ObjectNode in add_or_find_node.\n");
 			exit(0);
 		}
 
@@ -170,7 +170,7 @@ void node_add_handler(	HC_ObjectNode* node,
 	new_handler = malloc(sizeof(HC_Handler));
 	if (NULL == new_handler)
 	{
-		LOG_ERROR("Unable to malloc HC_Handler in node_add_handler");
+		LOG_ERROR("Unable to malloc HC_Handler in node_add_handler.\n");
 		exit(0);
 	}
 

@@ -5,10 +5,10 @@ struct mg_context * ctx;
 static void * ws_message_handler(enum mg_event event,
 						  		 struct mg_connection *conn)
 {
-	if (event == MG_WEBSOCKET_CONNECT) {
-
+	if (event == MG_WEBSOCKET_READY) {
+		MSG_LOG("Server ready.\n");
 	} else if (event == MG_WEBSOCKET_MESSAGE) {
-
+		MSG_LOG("Received message.\n");
 	} else if (event == MG_WEBSOCKET_DUNNO) {
 
 	}
