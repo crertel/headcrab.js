@@ -45,7 +45,7 @@ void headcrab_bind_object(  void* _target,
 	char * verb = malloc(strlen(_verb) * sizeof(*_verb));
 	strcpy(verb, _verb);
 	// Add to dispatch table.
-	dispatch_table_add(dispatch_table, _target, name,
+	dispatch_table_add(_target, name,
 						verb, _preOp, _preOpArgs,
 						_op, _postOp, _postOpArgs);
 	return;
@@ -56,10 +56,10 @@ void headcrab_clear_all_object_bindings( const char* _name )
 	// Cannot delete the global namespace node.
 	if (*name == '\0')
 		return;
-	dispatch_table_remove(dispatch_table, _name);
+	dispatch_table_remove(_name);
 }
 
 void headcrab_rebind_object( const char* _name, void* _object)
 {
-	dispatch_table_rebind(dispatch_table, _name, _object);
+	dispatch_table_rebind(_name, _object);
 }
