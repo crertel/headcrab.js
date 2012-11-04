@@ -47,7 +47,7 @@ void* _mq_pop(HC_Queue* q)
 
 	HC_QNode* node = q->head;
 	void* data = node->value;
-
+	
 	if (q->head == q->tail)
 	{
 		q->head = q->tail = NULL;

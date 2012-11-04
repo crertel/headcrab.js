@@ -14,7 +14,7 @@ HEADCRAB_ERROR headcrab_init(const char* _assetDir)
 	dispatch_table_init();
 	// Start Websocket Server.
 	LOG_MSG("Connecting to server.\n");
-	if ( websocket_initialize(_assetDir) ) {
+	if ( websocket_initialize(_assetDir) == 0 ) {
 		LOG_MSG("Connected to server.\n");
 	} else {
 		LOG_ERROR("Failed to connect to server.\n");
@@ -113,6 +113,7 @@ void dispatch(json_t *message)
 		return;
 	}
 
+	LOG_MSG("Dispatching on message.");
 	dispatch_table_execute( json_string_value(target),
 							json_string_value(command),
 							args);
@@ -126,6 +127,7 @@ void headcrab_handle_commands()
 
 	for(; NULL != command; command = (json_t *)mq_pop(MQ_IN))
 	{
+		LOG_MSG("Pulling message off of in-queue.\n");
 		dispatch(command);
 	}
 }

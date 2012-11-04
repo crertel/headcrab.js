@@ -15,9 +15,17 @@ static void * websocket_message_handler(enum mg_event event,
 		LOG_MSG("Received message.\n");
 		json_error_t error;
 		char *buffer = malloc(sizeof(char) * 1024 * 16);
+
+    // This is returning a raw frame
 		int len = mg_read(conn, buffer, sizeof(char) * 1024 * 16);
+
 		json_t *message = json_loads(buffer, len, &error);
+
+    LOG_MSG(error.text);
+
+
 		free(buffer);
+    LOG_MSG("Pushing message onto in-queue.\n");
 		mq_push(MQ_IN, message);
 	} else if (event == MG_WEBSOCKET_CLOSE) {
 		LOG_MSG("Server closed by client.\n");
