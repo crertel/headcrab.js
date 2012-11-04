@@ -13,11 +13,11 @@ HEADCRAB_ERROR headcrab_init(const char* _assetDir)
 	// Initialize the dispatch table.
 	dispatch_table_init();
 	// Start Websocket Server.
-	LOG_MSG("Connecting to server.\n");
-	if ( websocket_initialize(_assetDir) ) {
-		LOG_MSG("Connected to server.\n");
+	LOG_MSG("Starting server.\n");
+	if (websocket_initialize(_assetDir) == 0) {
+		LOG_MSG("Server started.\n");
 	} else {
-		LOG_ERROR("Failed to connect to server.\n");
+		LOG_ERROR("Failed to start server.\n");
 		headcrab_shutdown();
 		return HC_FAIL;
 	}
@@ -27,7 +27,7 @@ HEADCRAB_ERROR headcrab_init(const char* _assetDir)
 
 void headcrab_shutdown()
 {
-	LOG_MSG("Disconnecting from server.\n");
+	LOG_MSG("Server shutdown.\n");
 	websocket_shutdown();
 	return;
 }
