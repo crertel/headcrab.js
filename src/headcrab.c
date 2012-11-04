@@ -68,3 +68,51 @@ void headcrab_rebind_object( const char* _name, void* _object)
 {
 	dispatch_table_rebind(_name, _object);
 }
+
+void dispatch(json_t *message)
+{
+	if (!json_is_object(message))
+	{
+		// reply: bad message
+		return;
+	}
+	
+	json_t *type, *target, *command, *args, *seqID;
+
+	type = json_object_get(message, "type");
+	if (!json_is_string(type) || strcmp(json_string_value, "command"))
+	{
+		// reply: bad message
+		return;
+	}
+
+	target = json_object_get(message, "target");
+	if (!json_is_string(target))
+	{
+		// reply: bad message
+		return;
+	}
+
+	command = json_object_get(message, "command");
+	if (!json_is_string(command))
+	{
+		// reply: bad message
+		return;
+	}
+
+	args = json_object_get(message, "args");
+	json_incref(args);
+
+	seqID = json_object_get(message, "seqID");
+	if (!json_integer(seqID))
+	{
+		// reply: bad message
+		return;
+	}
+
+	dispatch_table_execute( json_string_value(target),
+							json_string_value(command),
+							args);
+
+	json_decref(message);
+}

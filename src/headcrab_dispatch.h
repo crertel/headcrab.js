@@ -46,6 +46,8 @@ HEADCRAB_ERROR add_or_find_node(HC_ObjectNode** out,
 								const char* _name
 					 			);
 
+HC_ObjectNode* find_node(const char* _name);
+
 void node_add_handler(	HC_ObjectNode* node,
                         const char* _verb,
                         HC_PreOpFunction _preOp,
@@ -54,5 +56,9 @@ void node_add_handler(	HC_ObjectNode* node,
                         HC_PostOpFunction _postOp,
                         const void* _postOpArgs
                       );
+
+void dispatch_table_execute(const char* _target,
+							const char* _verb,
+							json_t* args);
 
 #endif//HEADER_DISPATCH_H

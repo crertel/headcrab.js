@@ -153,6 +153,20 @@ HEADCRAB_ERROR add_or_find_node(HC_ObjectNode** out,
 	return HC_SUCCESS;
 }
 
+HC_ObjectNode* find_node(const char* _name)
+{
+	HC_ObjectNode* node = dispatch_table;
+	for(; NULL != node; node = node->next)
+	{
+		if (0 == strcmp(node->name, _name))
+		{
+			return node;
+		}
+	}
+	return null;
+}
+
+
 /*
 	Adds a new handler for the specified verb to the node.
 */
@@ -187,5 +201,23 @@ void node_add_handler(	HC_ObjectNode* node,
 		// Otherwise, add new handler to the end of the list
 		for(handler = node->handler; NULL != handler->next; handler = handler->next);
 		handler->next = new_handler;
+	}
+}
+
+void dispatch_table_execute(const char* _target,
+							const char* _verb,
+							json_t* args)
+{
+
+	HC_ObjectNode* node = find_node(_target);
+	HC_Handler* handler = node->handler;
+	for(; NULL != handler; handler = handler->next)
+	{
+		if (0 == strcmp(handler->name, _verb))
+		{
+			handler->pre(handler->preArgs);
+			handler->op(node->object, args);
+			handler->post(handler->postArgs);
+		}
 	}
 }
