@@ -1,8 +1,11 @@
 CFLAGS=	-W -Wall -pthread -g -I../inc
 LDFLAGS= -ldl -ljansson -lwebsockets -lz
 
+HC_SRCS = $(wildcard src/headcrab*.c)
+SRCS = examples/unnamed_scientist.c
+
 all:
-	$(CC) $(CFLAGS) -DDEBUG ../examples/unnamed_scientist.c headcrab.c headcrab_dispatch.c headcrab_webserver_lws.c headcrab_message_queue.c $(LDFLAGS) $(ADD) -o webserver;
+	$(CC) $(CFLAGS) -DDEBUG $(SRCS) $(LDFLAGS) $(ADD) -o webserver;
 
 
 MSVC    = e:/vc6
