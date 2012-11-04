@@ -24,13 +24,13 @@ typedef void (*HC_LogFunction)(const char* fmt, ...);
     HC_PreOpFunction is a function pointer that will be called before accessing an object, and passed arguments needed to do its work.
     This is useful, for example, when needing to acquire a mutex for safety in accessing a variable.
 */
-typedef HEADCRAB_ERROR (*HC_PreOpFucntion)(const void* _args);
+typedef HEADCRAB_ERROR (*HC_PostOpFunction)(const void* _args);
 
 /*
     HC_PostOpFunction is a function pointer that will be called after accessing an object, and passed arguments needed to do its work.
     This is useful, for example, when needing to release a previously acquired mutex.
 */
-typedef HEADCRAB_ERROR (*HC_PostOpFucntion)(const void* _args);
+typedef HEADCRAB_ERROR (*HC_PostOpFunction)(const void* _args);
 
 /*
     HC_MutatorFunction is a function pointer that will be called to change an object when prompted by the web interface.
@@ -38,6 +38,33 @@ typedef HEADCRAB_ERROR (*HC_PostOpFucntion)(const void* _args);
     Note that the _args parameter should not be depended upon to exist once function leaves scope--so, copy what you need.
 */
 typedef void (*HC_MutatorFunction)(void* _target, const json_t* _args);
+
+/*
+    log_call is the function to be used for logging.
+    It can be specified by the user for custom logging.
+    By default, it points to printf().
+*/
+HC_LogFunction log_call;
+
+/*
+    LOG_MSG logs a message to the log_call function, which is printf by default.
+    It is used for informational log messages only.
+*/
+#ifdef DEBUG    
+#define LOG_MSG(x, ...) (log_call(x, __VA_ARGS__))
+#else
+#define LOG_MSG
+#endif
+
+/*
+    LOG_ERROR logs messages out to stderr.
+    It is used in exceptional situations, when things have gone horribly wrong.
+*/
+#ifdef DEBUG
+#define LOG_ERROR(x, ...) (fprintf(stderr, x, ...))
+#else
+#define LOG_ERROR
+#endif
 
 /*
     Function to initialize headcrab--this will startup the web server and point it at the directory to serve assets from.
