@@ -40,12 +40,10 @@ void headcrab_bind_object(  void* _target,
                         )
 {
 	// Copy the strings.
-	size_t name_len = strnlen(_name, MAXSTRLEN);
-	char * name = malloc(name_len * sizeof(*_name));
-	strncpy(name, _name, MAXSTRLEN);
-	size_t verb_len = strnlen(_verb, MAXSTRLEN);
-	char * verb = malloc(verb_len * sizeof(*_verb));
-	strncpy(verb, _verb, MAXSTRLEN);
+	char * name = malloc(strlen(_name) * sizeof(*_name));
+	strcpy(name, _name);
+	char * verb = malloc(strlen(_verb) * sizeof(*_verb));
+	strcpy(verb, _verb);
 	// Add to dispatch table.
 	dispatch_table_add(dispatch_table, _target, name,
 						verb, _preOp, _preOpArgs,
