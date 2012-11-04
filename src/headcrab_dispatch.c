@@ -2,6 +2,21 @@
 
 
 /*
+	If there is a node with the name _name in _table, rebinds the node to use
+	_target as its object. If there is no such node, does nothing.
+*/
+void dispatch_table_rebind(HC_ObjectNode* _table, const char* _name, void* _target)
+{
+	for(; _table != NULL; _table++)
+	{
+		if (0 == strcmp(_table->name, _name))
+		{
+			_table->object = _target;
+		}
+	}
+}
+
+/*
 	Removes the node with the name _name from the table, including all handlers
 	for that name.
 
