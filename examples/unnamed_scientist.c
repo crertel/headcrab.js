@@ -14,11 +14,7 @@ int actually_fprintf(const char * stuff, ...)
 int main(int argc, char ** argv)
 {
 	headcrab_init("./");
-	printf("FUCK YOU\n");
-	LOG_MSG("We should not be able to do this.\n");
 	headcrab_set_logging_callback(actually_fprintf);
-	printf("FUCK YOU AGAIN!\n");
-	LOG_MSG("We should not be able to do this.\n");
 	getchar();
 	return 0;
 }
