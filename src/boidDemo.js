@@ -13,23 +13,22 @@ var boidDemo = (function () {
         // setup canvas 
         canvas = document.getElementById("boidcanvas");
         rt = canvas.getContext('2d');
-        //HC.connect(666);
+        HC.connect(8080);
 
         // hookup start button
         $("#startbutton").on("click", function (){
             drawBoids();
-            //HC.issue("flock", "getall", {}, updateBoidsRunner );
+            HC.issue("flock", "getall", {}, updateBoids );
             $(this).hide();
         });
     };
 
     var updateBoids = function (data) {
         // get the boid info
-        boidlist = [ {x:30, y:30, theta:Math.PI/4} ];
-        //boidlist = data.boids;
+        boidlist = data.boids;
 
         // schedule ourselves again
-        //HC.issue("flock", "getall", {}, updateBoids );
+        HC.issue("flock", "getall", {}, updateBoids );
         requestAnimationFrame(updateBoids);
     }
 
@@ -43,21 +42,11 @@ var boidDemo = (function () {
 
         // draw boids
         _.each(boidlist, function(boid) {
-            rt.moveto( boid.x, boid.y);
-            rt.save();
-            rt.rotate(boid.theta);
-            rt.beginPath();
-            rt.arc(0,0,5,0,Math.PI,false);
-            rt.fill();
-            rt.beginPath();
-            rt.lineto(0,10);
-            rt.stroke();
-            rt.restore();
+            rt.fillRect(boid.x-5, boid.y-5,10,10);
         });
 
         window.requestAnimationFrame(drawBoids);
     };
 
-    return {    init: init,
-            };
+    return { init: init };
 })();
