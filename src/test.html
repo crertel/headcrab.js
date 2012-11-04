@@ -1,25 +1,27 @@
 <!DOCTYPE html>  
-<meta charset="utf-8" />  
-<head>
-  <title>WebSocket Test</title>
-  <script language="javascript" type="text/javascript" src="jquery-1.8.2.min.js"></script>
-  <script language="javascript" type="text/javascript" src="d3.v2.min.js"></script>
-  <script language="javascript" type="text/javascript" src="underscore-min.js"></script>
-  <script language="javascript" type="text/javascript" src="headcrab.js"></script>
-  <script language="javascript" type="text/javascript" src="boidDemo.js"></script>
-  <script language="javascript" type="text/javascript">
-    $(document).ready( function () {
-        HC.connect(123);
-    });
-  </script>
-</head>
+<html>
+  <head>
+    <meta charset="utf-8" />  
+    <title>WebSocket Test</title>
+    <script language="javascript" type="text/javascript" src="jquery-1.8.2.min.js"></script>
+    <script language="javascript" type="text/javascript" src="d3.v2.min.js"></script>
+    <script language="javascript" type="text/javascript" src="underscore-min.js"></script>
+    <script language="javascript" type="text/javascript" src="headcrab.js"></script>
+    <script language="javascript" type="text/javascript" src="boidDemo.js"></script>
+    <script language="javascript" type="text/javascript">
+      $(document).ready( function () {
+          HC.connect(123);
+      });
+    </script>
+  </head>
 
-<body>
-  <h2>Mongoose WebSocket Test</h2>  
-  <div style="width: 400px; color: #aaa; padding: 1em; ">
-  This page code creates websocket to the URI "/foo",
-  sends a message to it, waits for the reply, then sends an "exit" message.
-  Server must echo all messages back, and terminate the conversation after
-  receiving the "exit" message.
-  </div>
+  <body>
+    <h2>Mongoose WebSocket Test</h2>  
+    <div style="width: 400px; color: #aaa; padding: 1em; ">
+    This page code creates websocket to the URI "/foo",
+    sends a message to it, waits for the reply, then sends an "exit" message.
+    Server must echo all messages back, and terminate the conversation after
+    receiving the "exit" message.
+    </div>
+  </body>
 </html>
