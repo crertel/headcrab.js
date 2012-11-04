@@ -1,5 +1,6 @@
 #include "mongoose.h"
 #include "headcrab.h"
+#include "headcrab_message_queue.h"
 
 struct mg_context * ctx;
 
@@ -12,6 +13,12 @@ static void * websocket_message_handler(enum mg_event event,
 		LOG_MSG("Server ready.\n");
 	} else if (event == MG_WEBSOCKET_MESSAGE) {
 		LOG_MSG("Received message.\n");
+		json_error_t error;
+		char *buffer = malloc(sizeof(char) * 1024 * 16);
+		int len = mg_read(conn, buffer, sizeof(char) * 1024 * 16);
+		json_t *message = json_loads(buffer, len, &error);
+		free(buffer);
+		mq_push(MQ_IN, message);
 	} else if (event == MG_WEBSOCKET_CLOSE) {
 		LOG_MSG("Server closed by client.\n");
 	}
