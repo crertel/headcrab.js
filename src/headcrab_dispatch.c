@@ -215,9 +215,17 @@ void dispatch_table_execute(const char* _target,
 	{
 		if (0 == strcmp(handler->name, _verb))
 		{
-			handler->pre(handler->preArgs);
+			if (handler->pre != NULL)
+			{
+				handler->pre(handler->preArgs);
+			}
+			
 			handler->op(node->object, args);
-			handler->post(handler->postArgs);
+
+			if (handler->post != NULL)
+			{
+				handler->post(handler->postArgs);	
+			}
 		}
 	}
 }
