@@ -39,27 +39,31 @@ typedef struct queue
 void queue_enqueue(queue_t *queue, void *value)
 {
 	pthread_mutex_lock(&(queue->mutex));
-	while (queue->size == queue->capacity)
-		pthread_cond_wait(&(queue->cond_full), &(queue->mutex));
+	if (queue->size == queue->capacity)
+	{
+		pthread_mutex_unlock(&(queue->mutex));
+		return;
+	}
 	queue->buffer[queue->in] = value;
 	++ queue->size;
 	++ queue->in;
 	queue->in %= queue->capacity;
 	pthread_mutex_unlock(&(queue->mutex));
-	pthread_cond_broadcast(&(queue->cond_empty));
 }
 
 void *queue_dequeue(queue_t *queue)
 {
 	pthread_mutex_lock(&(queue->mutex));
-	while (queue->size == 0)
-		pthread_cond_wait(&(queue->cond_empty), &(queue->mutex));
+	if (queue->size == 0)
+	{
+		return NULL;
+	}
+		
 	void *value = queue->buffer[queue->out];
 	-- queue->size;
 	++ queue->out;
 	queue->out %= queue->capacity;
 	pthread_mutex_unlock(&(queue->mutex));
-	pthread_cond_broadcast(&(queue->cond_full));
 	return value;
 }
 
