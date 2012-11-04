@@ -5,9 +5,10 @@
 
 #define MQ_LEN 100
 
-static void* buffer[MQ_LEN];
-static queue_t in = QUEUE_INITIALIZER(buffer);
-static queue_t out = QUEUE_INITIALIZER(buffer);
+static void* buffer_in[MQ_LEN];
+static void* buffer_out[MQ_LEN];
+static queue_t in = QUEUE_INITIALIZER(buffer_in);
+static queue_t out = QUEUE_INITIALIZER(buffer_out);
 
 void mq_push(MQ queue, void* value)
 {
