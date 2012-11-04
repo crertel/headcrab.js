@@ -44,7 +44,7 @@ HEADCRAB_ERROR postHook(void* _target)
     return HC_SUCCESS;
 }
 
-static int shouldShutdown = 0;
+volatile static int shouldShutdown = 0;
 
 void opShutdown(void* _target, const json_t* _args)
 {
