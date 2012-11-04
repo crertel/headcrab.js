@@ -175,7 +175,7 @@ void node_add_handler(	HC_ObjectNode* node,
 		exit(0);
 	}
 
-	*new_handler = (HC_Handler){_verb, NULL, _preOp, _postOp, _op, _preOpArgs, _postOpArgs };
+	*new_handler = (HC_Handler){_verb, NULL, _preOp, _postOp, _preOpArgs, _postOpArgs, _op };
 
 	if (NULL == node->handler)
 	{
