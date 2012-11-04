@@ -15,14 +15,14 @@ int customLog(const char* fmt, ...)
     return count;
 }
 
-int preHook(void* _target)
+HEADCRAB_ERROR preHook(void* _target)
 {
     printf("Preop tripped!\n");
     return HC_SUCCESS;
 }
 
 double accum = 0;
-int opAccum(void* _target, const json_t* _args)
+void opAccum(void* _target, const json_t* _args)
 {
     json_t* incval;
 
@@ -38,7 +38,7 @@ int opAccum(void* _target, const json_t* _args)
     return HC_SUCCESS;
 }
 
-int postHook(void* _target)
+HEADCRAB_ERROR postHook(void* _target)
 {
     printf("Accum has been set to %f!\n", *((double*)_target));
     return HC_SUCCESS;
@@ -46,13 +46,12 @@ int postHook(void* _target)
 
 static int shouldShutdown = 0;
 
-int opShutdown(void* _target, const json_t* _args)
+void opShutdown(void* _target, const json_t* _args)
 {
     shouldShutdown = 1;
-    return HC_SUCCESS;
 }
 
-int opGet(void* _target, const json_t* _args)
+void opGet(void* _target, const json_t* _args)
 {
     json_t* msg;
     json_t* value;
@@ -63,8 +62,6 @@ int opGet(void* _target, const json_t* _args)
     json_object_set_new(msg, "newval", value);
     headcrab_post_message(-1, msg);
     json_decref(msg);
-
-    return HC_SUCCESS;
 }
 
 int main(int argc, char ** argv)
