@@ -9,11 +9,18 @@
     document.getElementById('output').appendChild(div);
   };
   window.onload = function() {
-    var url = 'ws://' + window.location.host + '/foo';
+    var url = 'ws://localhost:8080';
     websocket = new WebSocket(url);
+
     websocket.onopen = function(ev) {
       writeToScreen('CONNECTED');
-      var message = 'Не всё подчиняется разуму. Но всё подчиняется упорству. ';
+      var message = json.stringify({
+        type: "command",
+        target: "a",
+        command: "two",
+        args: {test: 1},
+        seqID: 1
+      });
       writeToScreen('SENT: ' + message);
       websocket.send(message);
     };
