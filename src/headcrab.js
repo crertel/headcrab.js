@@ -28,7 +28,7 @@ var HC = (function() {
         // if the msg matches one of our outstanding IDs, handle it and remove.
         var cb = expectedCommands[data.seqID];
         if (cb !== undefined) {
-            cb(data.args); 
+            cb(data.data); 
             delete expectedCommands[data.seqID];
         }
     };
