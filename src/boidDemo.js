@@ -3,6 +3,7 @@ var boidDemo = (function () {
     var canvas;
     var rt;
     var boidlist = [];
+    var waitingOnUpdate = false;
 
     var init = function () {
 
@@ -28,8 +29,11 @@ var boidDemo = (function () {
         boidlist = data.boids;
 
         // schedule ourselves again
-        HC.issue("flock", "getall", {}, updateBoids );
-        requestAnimationFrame(updateBoids);
+        if (waitingOnUpdate == false) {
+        HC.issue("flock", "getall", {}, function (d) { waitingOnUpdate = false; updateBoids(d);} );
+        waitingOnUpdate = true;
+        }
+        //requestAnimationFrame(updateBoids);
     }
 
     var drawBoids = function () {
