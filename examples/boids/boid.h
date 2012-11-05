@@ -14,7 +14,7 @@
 #define BOID_CRUISE_SPEED MAX_VELOCITY / 5.0
 #define MAX_ACCELERATION 5.0
 #define MAX_TURN_RATE 5.0
-#define BOID_VIEW_DIST 5.0
+#define BOID_VIEW_DIST 30.0
 #define BOID_VIEW_ARC (270.0 / 360.0) * PI_CONSTANT
 
 // Separation
