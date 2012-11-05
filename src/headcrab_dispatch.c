@@ -88,7 +88,6 @@ void dispatch_table_add(	void* _target,
 							)
 {
 	HC_ObjectNode* node;
-
 	add_or_find_node(&node, _target, _name);
 	node_add_handler(node, _verb, _preOp, _preOpArgs, _op, _postOp, _postOpArgs);
 }

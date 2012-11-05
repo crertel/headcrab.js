@@ -1,20 +1,21 @@
 #include "boid_list.h"
 
-void boidlist_init(BoidList * _boid_list)
+void boidlist_init(BoidList ** _boid_list)
 {
-	_boid_list = malloc(sizeof(BoidList));
-	_boid_list->boid = NULL;
-	_boid_list->next = NULL;
+	*_boid_list = malloc(sizeof(BoidList));
+	(*_boid_list)->boid = NULL;
+	(*_boid_list)->next = NULL;
 }
 
-void boidlist_add(BoidList * _boid_list, Boid * _boid)
+void boidlist_add(BoidList ** _boid_list, Boid * _boid)
 {
-	if (_boid_list == NULL) {
+	if (*_boid_list == NULL) {
+		printf("Shouldn't be null\n");
 		boidlist_init(_boid_list);
-		_boid_list[0].boid = _boid;
+		(*_boid_list)[0].boid = _boid;
 		return;
 	}
-	BoidList * last_node = boidlist_get_last_node(_boid_list);
+	BoidList * last_node = boidlist_get_last_node(*_boid_list);
 	BoidList * new_node = malloc(sizeof(BoidList));
 	last_node->next = new_node;
 	new_node->boid = _boid;
@@ -51,10 +52,12 @@ int boidlist_size(BoidList * _boid_list)
 	return i;
 }
 
-static BoidList * boidlist_get_last_node(BoidList * _boid_list)
+BoidList * boidlist_get_last_node(BoidList * _boid_list)
 {
-	if (_boid_list == NULL)
+	if (_boid_list == NULL) {
+		printf("BoidList is null in getlastnode\n");
 		return NULL;
+	}
 	BoidList * last = _boid_list;
 	for (; last->next != NULL; last = last->next);
 	return last;

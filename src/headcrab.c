@@ -114,7 +114,7 @@ void dispatch(json_t *message)
 	json_incref(args);
 
 	seqID = json_object_get(message, "seqID");
-	if (!json_integer_value(seqID))
+	if (!json_is_integer(seqID))
 	{
 		LOG_ERROR("JSON seqID is not an integer!\n");
 		return;

@@ -6,6 +6,7 @@ Boid * boid_random_init()
 	Boid * new_boid = malloc(sizeof(Boid));
 	if (!new_boid)
 		return NULL;
+	printf("New boid at %p.\n", new_boid);
 	new_boid->boidID = unique_boidID++;
 	new_boid->size = (Dimensions){ BOID_LENGTH, BOID_LENGTH * 0.5 };
 	new_boid->pos = (Position){ (double)(rand() % MAP_WIDTH), 
