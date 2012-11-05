@@ -1,0 +1,15 @@
+example request:
+{
+	type: "command",
+	target: "a",
+	command: "two",
+	args: {...},
+	seqID: 123
+}
+
+example response:
+{
+	type: "response",
+	data: {...},
+	seqID: 123
+}
