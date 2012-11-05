@@ -67,15 +67,17 @@ void send_data_to_browser(void* _target, const json_t* _args)
 {
 	json_t * message = json_object();
 	json_object_set_new(message, "type", json_string("response"));
-	json_t * data = json_array();
+	json_t * data = json_object();
+	json_t * boids = json_array();
 
 	for(int i = 0; i < current_boid_count; ++i) {
 		json_t * boid_data = json_object();
 		json_object_set_new(boid_data, "x", json_real(boid_list[i]->pos.x));
 		json_object_set_new(boid_data, "y", json_real(boid_list[i]->pos.y));
 		json_object_set_new(boid_data, "theta", json_real(boid_list[i]->vel.dir));
-		json_array_append_new(data, boid_data);
+		json_array_append_new(boids, boid_data);
 	}
+	json_object_set_new(data, "boids", boids);
 	json_object_set_new(message, "data", data);
 
 	json_t * seq_id = json_object_get(_args, "seqID");
