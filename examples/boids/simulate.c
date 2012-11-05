@@ -100,6 +100,12 @@ void update(Boid *_boid, Accel _influence, double _dt=1)
 		boid_list[i]->pos.y += MAP_HEIGHT;*/
 }
 
+
+double wrap(double large, double limit)
+{
+	return large - (limit * floor(large / limit));
+}
+
 int update(double _time_step)
 {
 	int i;
