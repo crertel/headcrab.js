@@ -28,7 +28,7 @@
 #include <pthread.h>
 
 #include "headcrab.h"
-#include "headcrab_webserver.h"
+#include "headcrab_server.h"
 #include "headcrab_mqueue.h"
 #include <libwebsockets.h>
 
