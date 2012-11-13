@@ -1,6 +1,6 @@
 #pragma once
-#ifndef HEADCRAB_MESSAGE_QUEUE_H
-#define HEADCRAB_MESSAGE_QUEUE_H
+#ifndef HEADCRAB_MQUEUE_H
+#define HEADCRAB_MQUEUE_H
 
 typedef enum MQ {
 	MQ_IN,
@@ -10,4 +10,4 @@ typedef enum MQ {
 void mq_push(MQ queue, void* value);
 void* mq_pop(MQ queue);
 
-#endif//HEADCRAB_MESSAGE_QUEUE_H
+#endif//HEADCRAB_MQUEUE_H

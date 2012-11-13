@@ -1,7 +1,7 @@
 #include "headcrab.h"
-#include "headcrab_webserver_lws.h"
+#include "headcrab_webserver.h"
 #include "headcrab_dispatch.h"
-#include "headcrab_message_queue.h"
+#include "headcrab_mqueue.h"
 #include <string.h>
 
 HC_LogFunction log_call = printf;

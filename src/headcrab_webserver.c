@@ -28,8 +28,8 @@
 #include <pthread.h>
 
 #include "headcrab.h"
-#include "headcrab_webserver_lws.h"
-#include "headcrab_message_queue.h"
+#include "headcrab_webserver.h"
+#include "headcrab_mqueue.h"
 #include <libwebsockets.h>
 
 static struct libwebsocket_context *context;

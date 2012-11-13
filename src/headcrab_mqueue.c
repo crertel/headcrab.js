@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "headcrab.h"
-#include "headcrab_message_queue.h"
+#include "headcrab_mqueue.h"
 #include "queue.h"
 
 #define MQ_LEN 100
