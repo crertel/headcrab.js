@@ -1,19 +1,23 @@
+var alert_status = function(str) {
+    alert(str);
+}
+
 var HC = (function() {
     var expectedCommands = {};
     var connection;
     var nextSeqID = 0;
 
     var connect = function( port ) {
-        alert("Connecting to gui on port " + port);
+        alert_status("Connecting to server on port " + port + "...");
 
         nextSeqID = 0;
         connection = new WebSocket('ws://localhost:' + port, 'command');
 
         connection.onopen = function () {
-            alert("Connected!");
+            alert_status("Connected!");
         }
         connection.onerror = function (e) {
-            alert("WebSockets error :" + e);
+            alert_status("WebSockets error :" + e);
         }
         connection.onmessage = function (e) {
             var data = JSON.parse(e.data);
