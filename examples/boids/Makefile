@@ -1,9 +1,8 @@
-CFLAGS=	-W -Wall -Wno-unused-parameter -Wno-unused-variable -pthread -g -Iinc
-LDFLAGS= -ldl -ljansson -lwebsockets -lz -lm
+CFLAGS=	-W -Wall -Wno-unused-parameter -Wno-unused-variable -DDEBUG -pthread -g -L../../src -I../../inc
+LDFLAGS= -lheadcrab -ldl -ljansson -lwebsockets -lz -lm
 
-HC_SRCS = $(wildcard ../../src/headcrab*.c)
-SRCS = simulate.c boid.c
-PROG = boids
+SRCS = src/simulate.c src/boid.c
+PROG = boids_server
 
 all:
 	$(CC) $(CFLAGS) -DDEBUG $(SRCS) $(HC_SRCS) $(LDFLAGS) $(ADD) -o $(PROG);

@@ -1,9 +1,14 @@
+alert_status = function(str) {
+    $("#status").text(str);
+};
+
 var boidDemo = (function () {
 
     var canvas;
     var rt;
     var boidlist = [];
     var waitingOnUpdate = false;
+    var requestInterval;
 
     var init = function () {
 
@@ -12,32 +17,47 @@ var boidDemo = (function () {
         window.requestAnimationFrame = requestAnimationFrame;
 
         // setup canvas 
-        canvas = document.getElementById("boidcanvas");
+         canvas = document.getElementById("boidcanvas");
         rt = canvas.getContext('2d');
         HC.connect(8080);
 
         // hookup start button
         $("#startbutton").on("click", function (){
             drawBoids();
-            HC.issue("flock", "getall", {}, updateBoids );
-            $(this).hide();
+            HC.issue("flock", "getall", {}, function() {
+                requestInterval = setInterval(function() {
+                    fetchBoids();
+                }, 1000);
+            });
+            //$(this).hide();
+        });
+        // Connect stop button
+        $("#stopbutton").on("click", function (){
+            drawBoids();
+            HC.issue("flock", "stop", {}, clearInterval(requestInterval) );
+            //$(this).hide();
+        });
+        // hookup step button
+        $("#stepbutton").on("click", function (){
+            drawBoids();
+            HC.issue("flock", "getall", {}, fetchBoids);
+            //$(this).hide();
         });
     };
 
-    var updateBoids = function (data) {
-        // get the boid info
-        boidlist = data.boids;
-
+    var fetchBoids = function () {
         // schedule ourselves again
         if (waitingOnUpdate == false) {
-        HC.issue("flock", "getall", {}, function (d) { waitingOnUpdate = false; updateBoids(d);} );
-        waitingOnUpdate = true;
+            waitingOnUpdate = true;
+            HC.issue("flock", "getall", {}, function (d) { waitingOnUpdate = false; updateBoids(d); } );
         }
-        //requestAnimationFrame(updateBoids);
+    }
+
+    var updateBoids = function (data) {
+        boidlist = data.boids;
     }
 
     var drawBoids = function () {
-
         // clear canvas
         rt.save();
         rt.setTransform(1, 0, 0, 1, 0, 0);
